@@ -1,4 +1,4 @@
 # HG-Project
 
 
-identifying maximum points 
+Human gate analysis
