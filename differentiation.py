@@ -13,11 +13,13 @@ rows = data.shape[0]
 print('Gyro', gyro_z)
 print('time', time [:5])
 dif = np.zeros((rows, 1))
+
+#-------------- differentiation --------------#
 for i in range (rows-1):
     v_dif = gyro_z[i+1]- gyro_z[i]
     t_dif = time[i+1] - time[i]
     dif[i] = v_dif/t_dif
-
+#-------------- end of differentiation -------#
 print(dif)
 
 plt.plot(time, dif)
