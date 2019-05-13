@@ -43,15 +43,7 @@ sinc_func = sinc_func / np.sum(sinc_func)
 s = list(gyro_z)
 new_signal = np.convolve(s, sinc_func)
 
-trace1 = go.Scatter(
-    x=list(range(len(new_signal))),
-    y=new_signal,
-    mode='lines',
-    name='Low-Pass Filter',
-    marker=dict(
-        color='#C54C82'
-    )
-)
+trace1 = go.Scatter(x=list(range(len(new_signal))),y=new_signal,mode='lines',name='Low-Pass Filter',marker=dict(color='#C54C82'))
 
 layout = go.Layout(
     title='Low-Pass Filter',
