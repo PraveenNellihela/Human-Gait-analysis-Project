@@ -44,11 +44,7 @@ s = list(gyro_z)
 new_signal = np.convolve(s, sinc_func)
 
 trace1 = go.Scatter(x=list(range(len(new_signal))),y=new_signal,mode='lines',name='Low-Pass Filter',marker=dict(color='#C54C82'))
-
-layout = go.Layout(
-    title='Low-Pass Filter',
-    showlegend=True
-)
+layout = go.Layout(title='Low-Pass Filter',showlegend=True)
 
 trace_data = [trace1]
 fig = go.Figure(data=trace_data, layout=layout)

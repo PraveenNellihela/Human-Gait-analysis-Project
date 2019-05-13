@@ -52,6 +52,7 @@ def maximum():
         max_number[i]= 1                 #iterable for total maximums
         maximum[i+1] = gyro_z[i+1]
     #---------------------------------#
+
 if __name__ == '__main__':
     #--------- MAIN -------------------#
     plot_graph(time, gyro_z, 'Original', 'original data plot.html') #plot original
