@@ -15,7 +15,7 @@ gyro_z = data[:,6]
 time = data [:, 0]
 rows = data.shape[0]        #no. of rows in array
 maximum = np.zeros((rows, 1))  # initialize maximum array
-
+pos_b = np.zeros((rows, 1))  # initialize maximum array
 #-------------------------------------#
 def data_table():
     #------------- create table ----------#
@@ -46,24 +46,29 @@ def plot_LowPass():
     s = list(gyro_z)
     new_signal = np.convolve(s, sinc_func)
 
-    plot_graph(range(len(new_signal)),new_signal,'Low-Pass Filter', 'low pass filter.html','#C54C82')
+    for i in range(rows - 2):
+        if new_signal[i] <= new_signal[i+1] <= new_signal[i+2]:
+            if 20 <= new_signal[i+1] <= -20:
+                new_signal[i+1] = pos_b[i+1]
+
+    plot_graph(range(len(pos_b)),pos_b,'Low-Pass Filter', 'test mnaximum.html','#C54C82')
     #--------------------------------------#
 def calculate_maximum():
     #--------- Maximum ---------------#
     for i in range(rows - 2):
         if gyro_z[i] < gyro_z[i+1] and gyro_z[i+1] > gyro_z[i+2] :
             maximum[i+1] = gyro_z[i+1]
-    plt.plot(time, maximum, label="maximum")
+    plot.plot(time, maximum, label="maximum")
     plt.show()
     #---------------------------------#
 if __name__ == '__main__':
     #--------- MAIN -------------------#
     #plot_graph(time, gyro_z, 'Original', 'original data plot.html') #plot original
-    #plot_LowPass()                                                  #plot lowpass
+    plot_LowPass()                                                  #plot lowpass
     #print(maximum)
-    calculate_maximum()
+    #calculate_maximum()
     #print(maximum)
-    plot_graph(range(len(maximum)),maximum, 'maximum plot', 'maximum.html')
+    #plot_graph(range(len(maximum)),maximum, 'maximum plot', 'maximum.html')
 
 #------------- function ---------------#
 
