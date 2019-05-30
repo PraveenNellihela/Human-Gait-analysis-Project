@@ -14,9 +14,9 @@ gyro_z = data[:,6]
 time = data [:, 0]
 rows = data.shape[0]        #no. of rows in array
 
-maximum = np.zeros((rows, 1))  # initialize maximum array
-pos_b = np.zeros((rows, 1))  # initialize maximum array
-new_signal = np.zeros((rows,1))
+maximum = np.empty((rows, 1))  # initialize maximum array
+pos_b = np.empty((rows, 1))  # initialize maximum array
+new_signal = np.empty((rows,1))
 #-------------------------------------#
 def data_table():
     #------------- create table ----------#
@@ -31,11 +31,23 @@ def plot_graph(x_var, y_var, plot_name, file_name, color='#1f77b4'):
     fig = go.Figure(data=trace_data, layout=layout)
     py.plot(fig, filename=file_name)
     #--------------------------------------#
+def plot_multigraph(x, y1, y2, plot_name, file_name,color1='#1f77b4',color2='#000000'):
+    #------------- plot graph ------------#
+    trace1 = go.Scatter(x=list(x),y=list(y1),mode='lines', marker=dict(color=color1))
+    trace2 = go.Scatter(x=list(x), y=list(y2), mode='lines+markers', marker=dict(color=color2))
+
+    layout = go.Layout(title=plot_name, showlegend=True)
+    trace_data = [trace1, trace2]
+    fig = go.Figure(data=trace_data, layout=layout)
+    py.plot(fig, filename=file_name)
+    #py.plot(trace_data, filename=file_name)
+    #--------------------------------------#
 def plot_original():
     #------------- plot graph ------------#
     plot_graph(time, gyro_z, 'Original data plot', 'Original data plot.html', '#000000')
     #--------------------------------------#
-def plot_LowPass():
+def plot_LowPass(plot=False):
+    plot=plot
     #------------- LowPass filter ---------#
     fc = 0.1
     b = 0.08
@@ -50,17 +62,23 @@ def plot_LowPass():
 
     s = list(gyro_z)
     new_signal = np.convolve(s, sinc_func)
-    plot_graph(time, new_signal, 'lowpass filter', 'lowpass plot.html', '#FF6347')
+
+    if plot:
+        plot_graph(time, new_signal, 'lowpass filter', 'lowpass plot.html', '#FF6347')
 
     #pos_b = new_signal[argrelextrema(new_signal, np.greater)[0]]
     #plot_graph(time, pos_b, 'position test', 'position test.html', '#C54C82')
     #--------------------------------------#
-def calculate_maximum():
+def calculate_maximum(plot=False):
     #--------- Maximum ---------------#
+    plot=plot
     for i in range(rows - 2):
         if gyro_z[i] <= gyro_z[i+1] >= gyro_z[i+2] and -10<=gyro_z[i+1]<=30 :
             maximum[i+1] = gyro_z[i+1]
-    plot_graph(time, maximum, 'maximum', 'maximum plot.html')
+
+    if plot:
+        plot_multigraph(time, new_signal, maximum, 'combined plot', 'combined plot.html')
+        #plot_graph(time, maximum, 'maximum', 'maximum plot.html')
 
     #pos_b = new_signal[argrelextrema(new_signal, np.greater)[0]]
     #plot_graph(time, pos_b, 'position test', 'position test.html', '#C54C82')
@@ -68,9 +86,11 @@ def calculate_maximum():
 if __name__ == '__main__':
     #--------- MAIN -------------------#
     #plot_graph(time, gyro_z, 'Original', 'original data plot.html') #plot original
-    plot_original()
+    #plot_original()
     plot_LowPass()                                                  #plot lowpass
-    calculate_maximum()
+    calculate_maximum(True)
+
+
     #print(maximum)
     #calculate_maximum()
     #print(maximum)

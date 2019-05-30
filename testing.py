@@ -53,18 +53,24 @@ def calculate_maximum():
     for i in range(rows - 2):
         if gyro_z[i] < gyro_z[i+1] and gyro_z[i+1] > gyro_z[i+2] :
             maximum[i+1] = gyro_z[i+1]
-    plt.plot(time, maximum, label="maximum")
-    plt.show()
+    #plt.plot(time, maximum, label="maximum")
+    #plt.show()
+    plot_graph(time, maximum, 'maximum plot', 'maximum.html')
     #---------------------------------#
 if __name__ == '__main__':
     #--------- MAIN -------------------#
+
+    ########################## ISSUE ###########################################
+    ################# OFFLINE PLOTLY DOES NOT WORK #############################
+    ############################################################################
+
+
+
     #plot_graph(time, gyro_z, 'Original', 'original data plot.html') #plot original
     #plot_LowPass()                                                  #plot lowpass
     #print(maximum)
     calculate_maximum()
     #print(maximum)
-    plot_graph(range(len(maximum)),maximum, 'maximum plot', 'maximum.html')
+    #plot_graph(time,maximum, 'maximum plot', 'maximum.html')
 
-#------------- function ---------------#
 
-#--------------------------------------#

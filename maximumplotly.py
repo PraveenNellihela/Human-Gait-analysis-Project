@@ -39,7 +39,7 @@ print('total number of maximums =',sum(max_number))
 trace = go.Scatter(
     x = time,
     y = maximum,
-    mode = 'lines+markers'
+    mode = 'lines'
 )
 
 data = [trace]
