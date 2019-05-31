@@ -1,7 +1,6 @@
 import numpy as np
 
 from bokeh.plotting import figure, output_file, show
-from bokeh.models import ColumnDataSource
 
 #-------------- Import data ----------#
 data = np.genfromtxt("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/new_F1T1.csv", delimiter=',', skip_header=1, dtype=np.float)
@@ -12,11 +11,10 @@ gyro_z = data[:,6]
 time = data [:, 0]
 rows = data.shape[0]        #no. of rows in array
 
-maximum = list(np.zeros(rows)) # initialize maximum array
+#maximum = list(np.zeros(rows)) # initialize maximum array
 new_signal = list(np.zeros(rows))
-
-
 #-------------------------------------#
+
 
 def plot_graph(file_name, title, x_label, y_label, legend,x_var, y_var):
     #------------- plot graph ------------#
@@ -26,25 +24,25 @@ def plot_graph(file_name, title, x_label, y_label, legend,x_var, y_var):
     show(p)                                                             # show the results
     #--------------------------------------#
 
-def plot_multigraph(x1, y1, l1, c1, x2, y2, l2, c2,  x_label = 'x axis', y_label='y axis'):
+def plot_multigraph(x1, y1, l1, c1, x2, y2, l2, c2,  x_label = 'x axis', y_label='y axis',cond ='False'):
     #--------------------------------- plot multiple graphs in one ---------------------------------------#
-    output_file("multi_graph.html")                                       # output to static HTML file
-                                                                        # create a new plot
+    output_file("multi_graph.html")                                         # output to static HTML file
+                                                                            # create a new plot
     p = figure(
         tools="pan,box_zoom,reset,save",
         x_axis_label=x_label, y_axis_label=y_label,
         sizing_mode = "stretch_both"
     )
-    #source = ColumnDataSource(new_signal)
+                                                                            # add some renderers
+    original = cond                                                         # plot original data conditionally
+    if original == True:
+        p.line(time, gyro_z, legend="original", line_color='green')
+        p.circle(time, gyro_z, legend="original", fill_color='white', line_color='green', size=4)
 
-    # add some renderers
-    p.line(time, gyro_z, legend="original", line_color='green') #source=source)
-    p.circle(time, gyro_z, legend="original", fill_color='white', line_color='green', size=4)
-
-    p.line(x1, y1, legend=l1)
+    p.line(x1, y1, legend=l1, line_color=c1)
     p.circle(x1, y1, legend=l1, fill_color="white", size=8)
 
-    p.line(x2, y2, legend=l2, line_color=c2) #source=source)
+    p.line(x2, y2, legend=l2, line_color=c2)
     p.circle(x2, y2, legend=l2, fill_color=c2, line_color=c2, size=6)
                                                                         # show the results
     show(p)
@@ -55,8 +53,7 @@ def plot_original():
     plot_graph('original.html', 'original data plot', 'time','gyro_z', 'Original data', time, gyro_z)
     #-----------------------------------------------------------------------------------------------------#
 
-def plot_LowPass(plot=False):
-    plot = plot
+def LowPass():
     #---------------------------------------- LowPass filter ---------------------------------------------#
     fc = 0.1
     b = 0.08
@@ -71,33 +68,27 @@ def plot_LowPass(plot=False):
 
     s = list(gyro_z)
     new_signal = np.convolve(s, sinc_func)
-
-    if plot:
-        plot_multigraph(time,new_signal,'lowpass filtered data','blue',time,maximum,'maximum','red','time','gyro data')
-
+    return new_signal
     #------------------------------------------------------------------------------------------------------#
 
-def calculate_maximum(plot=False):
+
+def calculate_maximum():
     #------------------------------------------ Maximum ---------------------------------------------------#
-    plot = plot
+    maxi = np.zeros(rows)
     for i in range(rows - 2):
-        if gyro_z[i] <= gyro_z[i+1] >= gyro_z[i+2] and -10<=gyro_z[i+1]<=30:
-            maximum[i+1] = gyro_z[i+1]
-
-    if plot:
-        plot_multigraph(time, gyro_z, 'original data', 'blue', time, maximum, 'maximum', 'red', 'time',
-                        'gyro data')
-        #plot_graph("maximum.html","maximum plot",'time','maximum points', 'maximum', time, maximum[:,0] )
-
+        if new_signal[i] <= new_signal[i+1] >= new_signal[i+2] and -10<=new_signal[i+1]<=30:
+            maxi[i+1] = new_signal[i+1]
+    return maxi
     #-----------------------------------------------------------------------------------------------------#
+
 
 if __name__ == '__main__':
     #------------------------------------------ MAIN -----------------------------------------------------#
 
-    plot_original()                                                     #plot original
-                                                                        #plot lowpass
-    calculate_maximum()
-    plot_LowPass(True)
+    new_signal = LowPass()
+    maximum = calculate_maximum()
+
+    plot_multigraph(time, new_signal, 'low pass data', 'blue', time, maximum, 'maximum', 'red', 'time','gyro data')
 
 
 
