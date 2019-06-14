@@ -159,7 +159,7 @@ if __name__ == '__main__':
     end_of_swing_A()
     mid_swing_E()
 
-    all_positions('all_positions.html', time, peak_max, 'red', first_max, 'black', peak_mini, 'orange', arr_a, 'blue', arr_e, 'pink', 'position f', 'position b','position d','position a','position e',cond_filtered=True)
+    #all_positions('all_positions.html', time, peak_max, 'red', first_max, 'black', peak_mini, 'orange', arr_a, 'blue', arr_e, 'pink', 'position f', 'position b','position d','position a','position e',cond_filtered=True)
     '''
     plot_multigraph('maximum.html',time, new_signal, 'low pass data', 'blue', time, peak_max, 'maximum', 'red', 'time','gyro data')
     plot_multigraph('minimum.html', time, new_signal, 'low pass data', 'blue', time, first_max, 'position b', 'orange','time', 'gyro data')
@@ -167,7 +167,7 @@ if __name__ == '__main__':
     plot_multigraph('eos.html',time, new_signal, 'low pass data', 'blue', time, position_a, 'end of swing (position a)', 'purple', 'time', 'gyro data')
     '''
 
-    #dataframe = pd.DataFrame({'time': time, 'filtered gyro Z': new_signal, 'maximum peak(F)': peak_max, 'zero crossing (A)': position_a,'maximum zero(B)': first_max,'peak minimum (D)':peak_mini,'mid swing(E)':position_e})
-
+    dataframe = pd.DataFrame({'time': time, 'filtered gyro Z': new_signal, 'maximum peak(F)': peak_max, 'zero crossing (A)': arr_a,'maximum zero(B)': first_max,'peak minimum (D)':peak_mini,'mid swing(E)':arr_e})
+    print(dataframe)
 
 # f to a  time 200
