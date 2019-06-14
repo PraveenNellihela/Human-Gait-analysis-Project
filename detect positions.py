@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.signal as signal
 from bokeh.plotting import figure, output_file, show
-import itertools
+import pandas as pd
 #-------------- Import data ----------#
 data = np.genfromtxt("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/new_F1T1.csv", delimiter=',', skip_header=1, dtype=np.float)
 #-------------------------------------#
@@ -18,7 +18,8 @@ first_max = np.empty(rows)
 peak_max = np.empty(rows)
 first_mini = np.empty(rows)
 peak_mini = np.empty(rows)
-
+arr_e = np.empty(rows)
+arr_a = np.empty(rows)
 begin = 0
 end = 200
 
@@ -54,7 +55,7 @@ def plot_multigraph(filename, x1, y1, l1, c1, x2, y2, l2, c2,  x_label = 'x axis
     show(p)
     #-----------------------------------------------------------------------------------------------------#
 
-def all_positions(filename, x1, y1, c1, y2, c2,  y3,c3, y4,c4, l1,l2,l3,l4, x_label = 'x axis', y_label='y axis',cond_original ='False', cond_filtered='False'):
+def all_positions(filename, x1, y1, c1, y2, c2,  y3,c3, y4,c4,y5,c5, l1,l2,l3,l4,l5, x_label = 'x axis', y_label='y axis',cond_original ='False', cond_filtered='False'):
     #--------------------------------- plot multiple graphs in one ---------------------------------------#
     output_file(filename)                                         # output to static HTML file
                                                                             # create a new plot
@@ -85,6 +86,9 @@ def all_positions(filename, x1, y1, c1, y2, c2,  y3,c3, y4,c4, l1,l2,l3,l4, x_la
 
     p.line(x1, y4, legend=l4, line_color=c4)
     p.circle(x1, y4, legend=l4,  line_color=c4, size=8)
+
+    p.line(x1, y5, legend=l5, line_color=c5)
+    p.circle(x1, y5, legend=l5,  fill_color=c5, line_color=c5, size=8)
                                                                         # show the results
     show(p)
 
@@ -129,13 +133,21 @@ def calculate_mimimum():
                 peak_mini[i+1] = new_signal[i+1]
     #-----------------------------------------------------------------------------------------------------#
 
-def end_of_swing():
+def end_of_swing_A():
     #------------------------------------------ position a -----------------------------------------------#
-    arr_a = np.empty(rows)
+
     for i in range(rows - 2):
         if -20<= new_signal[i+1] <=20 and new_signal[i]>new_signal[i+1]>new_signal[i+2] and new_signal[i+1]>=0:
             arr_a[i+1] = new_signal[i+1]
-    return arr_a
+
+    #-----------------------------------------------------------------------------------------------------#
+
+def mid_swing_E():
+    #------------------------------------------ position a -----------------------------------------------#
+
+    for i in range(rows - 2):
+        if -20<= new_signal[i+1] <=20 and new_signal[i]<new_signal[i+1]<new_signal[i+2] and new_signal[i+1]>=0 :
+            arr_e[i+1] = new_signal[i+1]
     #-----------------------------------------------------------------------------------------------------#
 
 if __name__ == '__main__':
@@ -144,9 +156,10 @@ if __name__ == '__main__':
 
     calculate_maximum()
     calculate_mimimum()
-    position_a = end_of_swing()
+    end_of_swing_A()
+    mid_swing_E()
 
-    all_positions('all_positions.html', time, peak_max, 'red', first_max, 'black', peak_mini, 'orange', position_a, 'blue', 'position f', 'position b','position d','position a',cond_filtered=True)
+    all_positions('all_positions.html', time, peak_max, 'red', first_max, 'black', peak_mini, 'orange', arr_a, 'blue', arr_e, 'pink', 'position f', 'position b','position d','position a','position e',cond_filtered=True)
     '''
     plot_multigraph('maximum.html',time, new_signal, 'low pass data', 'blue', time, peak_max, 'maximum', 'red', 'time','gyro data')
     plot_multigraph('minimum.html', time, new_signal, 'low pass data', 'blue', time, first_max, 'position b', 'orange','time', 'gyro data')
@@ -154,7 +167,7 @@ if __name__ == '__main__':
     plot_multigraph('eos.html',time, new_signal, 'low pass data', 'blue', time, position_a, 'end of swing (position a)', 'purple', 'time', 'gyro data')
     '''
 
-
+    #dataframe = pd.DataFrame({'time': time, 'filtered gyro Z': new_signal, 'maximum peak(F)': peak_max, 'zero crossing (A)': position_a,'maximum zero(B)': first_max,'peak minimum (D)':peak_mini,'mid swing(E)':position_e})
 
 
 # f to a  time 200
