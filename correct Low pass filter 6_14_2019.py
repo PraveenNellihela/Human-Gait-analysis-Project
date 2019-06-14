@@ -91,6 +91,6 @@ if __name__ == '__main__':
     maximum = calculate_maximum()
     minimum = calculate_mimimum()
     plot_multigraph(time, new_signal, 'low pass data', 'blue', time, maximum, 'maximum', 'red', 'time','gyro data', cond=True)
-    plot_multigraph(time, new_signal, 'low pass data', 'blue', time, minimum, 'maximum', 'orange', 'time','gyro data', cond=True)
+    plot_multigraph(time, new_signal, 'low pass data', 'blue', time, minimum, 'minimum', 'orange', 'time','gyro data', cond=True)
 
 
