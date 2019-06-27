@@ -3,12 +3,11 @@ import scipy.signal as signal
 from bokeh.io import curdoc
 from bokeh.plotting import figure, output_file, show
 import pandas as pd
-output_file('temp.html')
 import itertools
-
-
 import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema, find_peaks
+
+output_file('temp.html')
 
 def LowPass(filterData):
     # ---------------------------------------- LowPass filter ---------------------------------------------#
@@ -22,11 +21,12 @@ def LowPass(filterData):
 
 if __name__ == '__main__':
 
-    sel = 2000                  #iterator to get data section by section
-    start=0
-    while sel < 2001:
+    sel = 200                  #iterator to get data section by section
+    start = 0
+    plt.ion()
+    while sel < 1600:
         with open("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/new_F1T1.csv") as f_in:
-            x = np.genfromtxt(itertools.islice(f_in, start, sel), delimiter=',', skip_header=1, dtype=np.float)
+            x = np.genfromtxt(itertools.islice(f_in, start, sel), delimiter=',',  dtype=np.float)
 
         #create data frame
         time = x[:, 0]
@@ -46,11 +46,17 @@ if __name__ == '__main__':
 
         # Plot results
         #'''
-        plt.scatter(df.index, df['min'], c='g')
-        plt.scatter(df.index, df['max'], c='y')
-        plt.scatter(df.index, df['peak'], c='r')
-        plt.plot(df.index, df['gyroZ'])
-        plt.show()
+        plt.scatter(df['time'], df['min'], c='g')
+        plt.scatter(df['time'], df['max'], c='y')
+        plt.scatter(df['time'], df['peak'], c='r')
+        plt.plot(df['time'], df['gyroZ'])
+
+        plt.draw()
+        plt.pause(0.5)
+
+
         #'''
-        start= sel
-        sel=sel+40
+        start = sel+1
+        sel=sel+201
+
+    plt.show(block=True)
