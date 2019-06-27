@@ -192,7 +192,10 @@ if __name__ == '__main__':
                 print(df['time'].iloc[peak_array[y]])
             else:
                 print('time between two peaks is greater than 1700')
-                df.at[peak_array[y+1], 'position F'] = np.nan
+                print('time of last peak', df['time'].loc[peak_array[y]])
+                print('peak array y+1 is ', df['time'].loc[peak_array[y+1]])
+                #print(df.iloc[peak_array[y]: peak_array[y+1], 2: 6])
+                df.iloc[peak_array[y]+1: peak_array[y+1], 2:7] = np.nan
                 '''df.at[x, 'position A'] = np.nan
                 df.at[x, 'position B'] = np.nan
                 df.at[x, 'position D'] = np.nan
