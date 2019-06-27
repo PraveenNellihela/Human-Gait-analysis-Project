@@ -181,9 +181,37 @@ if __name__ == '__main__':
             df.at[x,'position B'] = np.nan
             df.at[x,'position D'] = np.nan
             df.at[x,'position E'] = np.nan
-    print(df)
+
+    peak_array = list(df[df['position F'].notnull()].index)
+    number_of_peaks = df[df['position F'].notnull()].index.size
+
+    for y in range(number_of_peaks):
+        try:
+            if (df['time'].iloc[peak_array[y+1]]-df['time'].iloc[peak_array[y]]) < 1700:
+                print('time between two peaks is less than 1700')
+                print(df['time'].iloc[peak_array[y]])
+            else:
+                print('time between two peaks is greater than 1700')
+                df.at[peak_array[y+1], 'position F'] = np.nan
+                '''df.at[x, 'position A'] = np.nan
+                df.at[x, 'position B'] = np.nan
+                df.at[x, 'position D'] = np.nan
+                '''#df.at[x, 'position E'] = np.nan
+        except:
+            print('exception', y)
+            break
+    final_peak_index = df[df['position F'].notnull()].index[df[df['position F'].notnull()].index.size - 1]
+
+    #print(final_peak_index)
 
     ax1 = df.plot.line(x='time', y=[1, 2, 3, 4, 5, 6], style='-o')
+
+
+
+
+
+
+
    ##all_positions('all_positions.html', time, peak_max, 'red', first_max, 'black', peak_mini, 'orange', arr_a, 'blue', arr_e, 'purple', 'position f', 'position b','position d','position a','position e',cond_filtered=True)
 
 
