@@ -12,7 +12,7 @@ gyro_z = data[:, 6]
 time = data[:, 0]
 rows = data.shape[0]        # no. of rows in array
 new_signal = list(np.zeros(rows))
-# -------------------------------------#
+
 first_max = np.empty(rows)
 first_mini = np.empty(rows)
 peak_max = np.empty(rows)
@@ -26,10 +26,7 @@ peak_max[:] = np.nan
 peak_mini[:] = np.nan
 arr_e[:] = np.nan
 arr_a[:] = np.nan
-
-begin = 0
-end = 200
-
+# -------------------------------------#
 
 def low_pass():
     # ---------------------------------------- low_pass filter ---------------------------------------------#
