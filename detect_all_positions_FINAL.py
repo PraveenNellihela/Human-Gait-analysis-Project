@@ -1,9 +1,10 @@
 import numpy as np
 import scipy.signal as signal
-
+import pylab as plt
 import pandas as pd
 # -------------- Import data ----------#
-data = np.genfromtxt("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/new_F6T8.csv", delimiter=',',
+data = np.genfromtxt("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/combinedTestdata1.csv",
+                     delimiter=',',
                      skip_header=1, dtype=np.float)
 # -------------------------------------#
 
@@ -28,6 +29,7 @@ arr_e[:] = np.nan
 arr_a[:] = np.nan
 # -------------------------------------#
 
+
 def low_pass():
     # ---------------------------------------- low_pass filter ---------------------------------------------#
 
@@ -45,9 +47,9 @@ def calculate_maximum():
     # ------------------------------------------ Maximum ---------------------------------------------------#
     for i in range(rows - 2):
         if new_signal[i] <= new_signal[i+1] >= new_signal[i+2]:
-            if -15 <= new_signal[i+1] <= 30:
+            if -15 <= new_signal[i+1] <= 60:
                 first_max[i+1] = new_signal[i+1]
-            elif new_signal[i+1] > 50:
+            elif new_signal[i+1] > 60:
                 peak_max[i+1] = new_signal[i+1]
     # -----------------------------------------------------------------------------------------------------#
 
@@ -79,7 +81,7 @@ def mid_swing_e():
     # -----------------------------------------------------------------------------------------------------#
 
 
-def remove_invalids():
+def remove_invalids(count_steps):
     # remove values that appears before the first peak
     lim1 = df[df['position F'].notnull()].index[0]             # index of very first peak
     for x in range(len(df['position A'])):
@@ -93,9 +95,9 @@ def remove_invalids():
             if (df['time'].iloc[peak_array[y+1]]-df['time'].iloc[peak_array[y]]) < 1700:
                 continue
             else:
-                df.iloc[peak_array[y]+80: peak_array[y+1], 2:7] = np.nan
+                df.iloc[peak_array[y]+60: peak_array[y+1], 2:7] = np.nan
         except IndexError:      # exception occurs at final peak value.
-            df.iloc[peak_array[y]+80:, 2:7] = np.nan
+            df.iloc[peak_array[y]+60:, 2:7] = np.nan
 
     # remove invalid position values of A, D and E
     pos_b_indices = list(df[df['position B'].notnull()].index)
@@ -103,6 +105,9 @@ def remove_invalids():
     for i in range(lim2):
         df.iloc[pos_b_indices[i]:pos_b_indices[i]+20, 3, ] = np.nan
         df.iloc[pos_b_indices[i] - 20:pos_b_indices[i], [5, 6]] = np.nan
+    if count_steps:
+        steps = number_of_peaks
+        print(' number of steps = ', steps)
 
 
 if __name__ == '__main__':
@@ -119,7 +124,8 @@ if __name__ == '__main__':
                        'position B': first_max, 'position D': peak_mini, 'position E': arr_e})
 
     # remove invalid values
-    remove_invalids()
+    remove_invalids(count_steps=True)
 
     # plot graph
     ax1 = df.plot.line(x='time', y=[1, 2, 3, 4, 5, 6], style='-o')
+    plt.show()
