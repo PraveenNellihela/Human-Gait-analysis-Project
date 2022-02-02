@@ -8,14 +8,11 @@ import pandas as pd
 
 def low_pass():
     # ---------------------------------------- low_pass filter ---------------------------------------------#
-
     n = 3
     fc = 0.1
     b, a = signal.butter(n, fc, output='ba')
     filt_signal = signal.filtfilt(b, a, gyro_z)
-
     return filt_signal
-
     # ------------------------------------------------------------------------------------------------------#
 
 
@@ -50,7 +47,7 @@ def end_of_swing_a():
 
 
 def mid_swing_e():
-    # ------------------------------------------ position a -----------------------------------------------#
+    # ------------------------------------------ position e -----------------------------------------------#
     for i in range(rows - 2):
         if -20 <= new_signal[i+1] <= 20 and new_signal[i] < new_signal[i+1] < new_signal[i+2] and new_signal[i+1] >= 0:
             arr_e[i+1] = new_signal[i+1]
@@ -58,7 +55,7 @@ def mid_swing_e():
 
 
 def remove_invalids(count_steps):
-    # remove values that appears before the first peak
+    # remove values that appear before the first peak
     lim1 = df[df['position F'].notnull()].index[0]             # index of very first peak
     for x in range(len(df['position A'])):
         if df.loc[:, 'position F':'position D'].index[x] < lim1:
@@ -123,7 +120,6 @@ if __name__ == '__main__':
         arr_a[:] = np.nan
         # -------------------------------------#
 
-        # ------------------------------------------ MAIN -----------------------------------------------------#
         # carry out operations
         new_signal = low_pass()
         calculate_maximum()

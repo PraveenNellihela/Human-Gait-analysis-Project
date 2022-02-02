@@ -3,7 +3,7 @@ import scipy.signal as signal
 import pylab as plt
 import pandas as pd
 # -------------- Import data ----------#
-data = np.genfromtxt("D:/Work/SLIIT/Humain gait/data/New Analysis/MAL/200 Steps/IMU Data/combinedTestdata1.csv",
+data = np.genfromtxt("D:/Humain_gait/data/New Analysis/MAL/200 Steps/IMU Data/combinedTestdata1.csv",
                      delimiter=',',
                      skip_header=1, dtype=np.float)
 # -------------------------------------#
